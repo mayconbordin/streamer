@@ -13,6 +13,7 @@ Components:
 
 ## WordCount Example
 
+```java
 Stream sentences = builder.createStream("sentences", new Schema("sentence"));
 Stream words     = builder.createStream("words", new Schema("word", "count"));
 Stream counts    = builder.createStream("counts", new Schema("word", "count"));
@@ -36,3 +37,4 @@ builder.build();
 builder.subscribe("wordCount", words, BROADCAST);
 .subscribe("wordCount", words, SHUFFLE);
 .subscribe("wordCount", words, GROUP_BY, "word");
+```
