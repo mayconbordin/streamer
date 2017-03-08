@@ -1,0 +1,132 @@
+<?xml version="1.0"?>
+<project
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+        xmlns="http://maven.apache.org/POM/4.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    
+    <parent>
+        <groupId>com.streamer</groupId>
+        <artifactId>streamer</artifactId>
+        <version>1.1</version>
+    </parent>
+    
+    <groupId>com.streamer</groupId>
+    <artifactId>streamer-s4</artifactId>
+    <version>1.1</version>
+    <name>streamer-s4</name>
+    <url>http://maven.apache.org</url>
+    
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+    
+    <dependencies>
+        <dependency>
+            <groupId>com.streamer</groupId>
+            <artifactId>streamer-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
+        <!-- Apache S4 -->
+        <dependency>
+            <groupId>org.apache.s4</groupId>
+            <artifactId>s4-base</artifactId>
+            <version>${s4.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.apache.s4</groupId>
+            <artifactId>s4-comm</artifactId>
+            <version>${s4.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.s4</groupId>
+            <artifactId>s4-core</artifactId>
+            <version>${s4.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Apache S4 -->
+        
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.0</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+            <version>3.0</version>
+        </dependency>
+
+    </dependencies>
+    
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>${maven-dependency-plugin.version}</version>
+                <configuration>
+                    <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                    <overWriteReleases>false</overWriteReleases>
+                    <overWriteSnapshots>false</overWriteSnapshots>
+                    <overWriteIfNewer>true</overWriteIfNewer>
+
+                    <excludeGroupIds>org.apache.s4</excludeGroupIds>
+                    <excludeTransitive>true</excludeTransitive>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- assembly -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>${maven-assembly-plugin.version}</version>
+                <configuration>
+                    <descriptors>
+                        <descriptor>src/main/assembly/streamer-s4.xml</descriptor>
+                    </descriptors>
+                    <finalName>streamer-s4-${project.version}-FINAL</finalName>
+                    <attach>false</attach>
+                    <outputDirectory>../target</outputDirectory>
+                    <appendAssemblyId>false</appendAssemblyId>
+                    <archive>
+                        <manifestEntries>
+                            <Bundle-Version>${parsedVersion.osgiVersion}</Bundle-Version>
+                            <Bundle-Description>${project.description}</Bundle-Description>
+                            <Implementation-Version>${project.version}</Implementation-Version>
+                            <Implementation-Vendor>None</Implementation-Vendor>
+                            <Implementation-Vendor-Id>STREAMER</Implementation-Vendor-Id>
+                            <S4-App-Class>com.streamer.topology.impl.S4TaskRunner</S4-App-Class>
+                            <S4-Version>0.6.0-incubating</S4-Version>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id> <!-- this is used for inheritance merges -->
+                        <phase>package</phase> <!-- bind to the packaging phase -->
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
